@@ -10,7 +10,7 @@ const Navbar = () => {
     setShowCartMenu(!showCartMenu);
   };
 
-  // Must understand this
+  // When user clicks outside the cart menu, the cart menu closes
   const handleClickOutside = (event: MouseEvent) => {
     if (!cartMenuRef.current?.contains(event.target as Node)) {
       setShowCartMenu(false);
