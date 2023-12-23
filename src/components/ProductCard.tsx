@@ -1,11 +1,12 @@
 import { MdAdd } from "react-icons/md";
+import { IProduct } from "../types";
 
-const ProductCard = () => {
+const ProductCard: React.FC<IProduct> = ({ id, title, price, image }) => {
   return (
     <div
       className="
       w-full
-      shadow-2xl
+      shadow-md
       rounded-xl
       overflow-hidden
     "
@@ -13,8 +14,8 @@ const ProductCard = () => {
       {/* Product Image */}
       <div className="w-full h-[220px] overflow-hidden bg-neutral-100 rounded-br-xl rounded-bl-xl">
         <img
-          src="https://static.nike.com/a/images/f_auto,cs_srgb/w_1536,c_limit/g1ljiszo4qhthfpluzbt/nike-joyride.jpg"
-          alt="product"
+          src={image}
+          alt={title}
           className="w-full h-full object-cover hover:scale-150 transition duration-300 ease-in-out"
         />
       </div>
@@ -22,10 +23,10 @@ const ProductCard = () => {
       {/* Product details */}
       <div className="p-5 w-full">
         <h3 className="font-bold text-lg mb-px tracking-tight w-full">
-          Nike Joyride
+          {title}
         </h3>
         <h1 className="text-blue-700 font-bold text-xl mb-5 tracking-tight">
-          $200.99
+          ${price}
         </h1>
         <button
           className="
