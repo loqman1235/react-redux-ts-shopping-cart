@@ -1,6 +1,7 @@
 import { MdAdd } from "react-icons/md";
 import { IProduct } from "../types";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const ProductCard: React.FC<IProduct> = ({ id, title, price, image }) => {
   return (
     <div

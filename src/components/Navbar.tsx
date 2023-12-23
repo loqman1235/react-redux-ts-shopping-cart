@@ -1,18 +1,32 @@
 import { MdClose, MdShoppingBasket, MdCreditCard } from "react-icons/md";
 import CartProduct from "./CartProduct";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const Navbar = () => {
   const [showCartMenu, setShowCartMenu] = useState(false);
+  const cartMenuRef = useRef<HTMLDivElement | null>(null);
 
   const toggleCartMenu = () => {
     setShowCartMenu(!showCartMenu);
   };
 
+  // Must understand this
+  const handleClickOutside = (event: MouseEvent) => {
+    if (!cartMenuRef.current?.contains(event.target as Node)) {
+      setShowCartMenu(false);
+    }
+  };
+
   useEffect(() => {
-    showCartMenu
-      ? (document.body.style.overflow = "hidden")
-      : (document.body.style.overflow = "auto");
+    if (showCartMenu) {
+      document.body.style.overflow = "hidden";
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.body.style.overflow = "auto";
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [showCartMenu]);
 
   return (
@@ -45,7 +59,7 @@ const Navbar = () => {
         </button>
       </div>
 
-      {/* Cart */}
+      {/* Cart Menu*/}
 
       <div
         className={`
@@ -59,10 +73,11 @@ const Navbar = () => {
        p-5
        shadow-2xl
        transition-transform
-       duration-500
-       ease-out
+       duration-700
+       cubic-bezier(0.68, -0.55, 0.27, 1.55)
        ${showCartMenu ? "translate-x-0" : "translate-x-[200%]"}
        `}
+        ref={cartMenuRef}
       >
         {/* Cart Header */}
         <div className="w-full flex items-center justify-between mb-5">
