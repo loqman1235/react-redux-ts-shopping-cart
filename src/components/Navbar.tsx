@@ -81,6 +81,8 @@ const Navbar = () => {
 
       <div
         className={`
+        flex
+        flex-col
       h-screen
        w-[400px] 
        fixed 
@@ -133,8 +135,8 @@ const Navbar = () => {
 
         {cartItems.length > 0 && (
           <>
-            <hr />
-            <div>
+            <div className="mt-auto">
+              <hr />
               <div className="flex items-center justify-between py-5">
                 <h3 className="font-bold text-lg tracking-tight">Total</h3>
                 <h1 className="text-blue-700 font-bold text-lg">
