@@ -3,6 +3,7 @@ import api from "../services/api";
 import { useEffect, useState } from "react";
 import { IProduct } from "../types";
 import { toast } from "react-toastify";
+import SkeletonProductCard from "./SkeletonProductCard";
 
 const Products = () => {
   const [loading, setLoading] = useState(true);
@@ -43,16 +44,16 @@ const Products = () => {
   }
 
   return (
-    <div className="px-5 md:px-10 w-full mb-10">
-      <h2 className="text-2xl font-extrabold tracking-tight mb-2">Products</h2>
-      <div className="w-full grid grid-cols-1 md:grid-cols-4 gap-5">
-        {loading ? (
-          <p>Loading...</p>
-        ) : (
-          products.map((product) => (
-            <ProductCard key={product.id} {...product} />
-          ))
-        )}
+    <div className="px-5 md:px-10 w-full mb-10 pt-28">
+      <h2 className="text-2xl font-bold tracking-tight mb-4">Products</h2>
+      <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+        {loading
+          ? Array.from({ length: 8 }).map((_, i) => (
+              <SkeletonProductCard key={i} />
+            ))
+          : products.map((product) => (
+              <ProductCard key={product.id} {...product} />
+            ))}
       </div>
     </div>
   );

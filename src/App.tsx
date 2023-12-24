@@ -9,7 +9,17 @@ const App = () => {
       <Navbar />
       <Products />
       <Footer />
-      <ToastContainer />
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
     </main>
   );
 };
