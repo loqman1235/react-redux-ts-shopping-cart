@@ -55,8 +55,31 @@ const cartSlice = createSlice({
         updateTotalAmount(state);
       }
     },
+    deleteProduct: (state, action: PayloadAction<{ id: number }>) => {
+      const existingItem = state.cartItems.find(
+        (product) => product.id === action.payload.id
+      );
+
+      if (existingItem && existingItem.qty) {
+        state.cartItems = state.cartItems.filter(
+          (product) => product.id !== existingItem.id
+        );
+        const itemsPrice = existingItem.price * existingItem.qty;
+        state.totalAmount = state.totalAmount - itemsPrice;
+      }
+    },
+    resetCart: (state) => {
+      state.cartItems = [];
+      state.totalAmount = 0;
+    },
   },
 });
 
-export const { addItemToCart, incrementQty, decrementQty } = cartSlice.actions;
+export const {
+  addItemToCart,
+  incrementQty,
+  decrementQty,
+  deleteProduct,
+  resetCart,
+} = cartSlice.actions;
 export default cartSlice.reducer;

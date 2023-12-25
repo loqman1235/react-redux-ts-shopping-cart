@@ -14,7 +14,7 @@ const ProductCard: React.FC<IProduct> = ({ id, title, price, image }) => {
 
   const handleAddToCart = () => {
     dispatch(addItemToCart({ id, title, price, image, qty: 1 }));
-    toast.success("Added to cart");
+    toast.success(`${title} added to your cart`);
   };
 
   return (
