@@ -1,21 +1,10 @@
 import { MdAdd } from "react-icons/md";
 import { IProduct } from "../types";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../app/store";
-import { addItemToCart } from "../features/cartSlice";
 import formatPrice from "../utils/formatPrice";
-import { toast } from "react-toastify";
+import useCart from "../hooks/useCart";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const ProductCard: React.FC<IProduct> = ({ id, title, price, image }) => {
-  const dispatch = useDispatch<AppDispatch>();
-
-  // console.log(cartItems, "Cart items");
-
-  const handleAddToCart = () => {
-    dispatch(addItemToCart({ id, title, price, image, qty: 1 }));
-    toast.success(`${title} added to your cart`);
-  };
+  const { addProduct } = useCart();
 
   return (
     <div
@@ -63,7 +52,7 @@ const ProductCard: React.FC<IProduct> = ({ id, title, price, image }) => {
         transition
         gap-2
         "
-          onClick={handleAddToCart}
+          onClick={() => addProduct({ id, title, price, image, qty: 1 })}
         >
           <MdAdd size={24} /> Add to cart
         </button>

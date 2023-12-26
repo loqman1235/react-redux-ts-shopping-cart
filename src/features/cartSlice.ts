@@ -6,9 +6,21 @@ export interface CartState {
   totalAmount: number;
 }
 
+const getStoredCartItems: IProduct[] = localStorage.getItem("cartItems")
+  ? JSON.parse(localStorage.getItem("cartItems")!)
+  : [];
+
+const getTotalAmount = getStoredCartItems.reduce((acc, product) => {
+  if (product.qty) {
+    return acc + product.price * product.qty;
+  }
+
+  return acc;
+}, 0);
+
 const initialState: CartState = {
-  cartItems: [],
-  totalAmount: 0,
+  cartItems: getStoredCartItems,
+  totalAmount: getTotalAmount,
 };
 
 const updateTotalAmount = (state: CartState) => {
