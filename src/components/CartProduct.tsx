@@ -1,4 +1,4 @@
-import { MdAdd, MdOutlineDelete, MdRemove } from "react-icons/md";
+import { MdAdd, MdDelete, MdRemove } from "react-icons/md";
 import { IProduct } from "../types";
 import formatPrice from "../utils/formatPrice";
 import useCart from "../hooks/useCart";
@@ -45,7 +45,7 @@ const CartProduct: React.FC<IProduct> = ({ id, title, price, image, qty }) => {
           className="text-red-700"
           onClick={() => removeProduct(id, title)}
         >
-          <MdOutlineDelete size={20} />
+          <MdDelete size={20} />
         </button>
       </div>
     </div>

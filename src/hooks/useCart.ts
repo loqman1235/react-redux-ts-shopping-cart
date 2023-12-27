@@ -1,113 +1,96 @@
+// Hook for adding, remove , incrementing , decrementing product in localstorage
+
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../app/store";
+import { IProduct } from "../types";
+import { toast } from "react-toastify";
 import {
   addItemToCart,
   decrementQty,
   deleteProduct,
   incrementQty,
-  resetCart,
 } from "../features/cartSlice";
-import { toast } from "react-toastify";
-import { IProduct } from "../types";
-
-// Bug: It only saves one cart product in localStorage
 
 const useCart = () => {
   const dispatch = useDispatch<AppDispatch>();
 
-  const storeCartItemsString = localStorage.getItem("cartItems");
-  const storedCartItems: IProduct[] | null = storeCartItemsString
-    ? JSON.parse(storeCartItemsString)
-    : null;
-
-  //   Add Item to localStorage
-  const addProduct = (product: IProduct) => {
-    let updatedProducts: string;
-
-    if (storedCartItems) {
-      const existingProductIndex = storedCartItems.findIndex(
-        (item) => item.id === product.id
-      );
-
-      //   Check if the product already exists if not increament qty by 1
-      if (existingProductIndex !== -1) {
-        storedCartItems[existingProductIndex].qty =
-          (storedCartItems[existingProductIndex].qty || 0) + 1;
-
-        updatedProducts = JSON.stringify([...storedCartItems]);
-      } else {
-        updatedProducts = JSON.stringify([...storedCartItems, product]);
-      }
-
-      localStorage.setItem("cartItems", updatedProducts);
-      toast.success(`${product.title} has been added into your cart`);
-    } else {
-      updatedProducts = JSON.stringify([product]);
-      localStorage.setItem("cartItems", updatedProducts);
-    }
-    dispatch(addItemToCart(product));
+  const getStoredCartItems = (): IProduct[] => {
+    return JSON.parse(localStorage.getItem("cartItems") ?? "[]");
   };
 
-  //   Remove item from localStorage
-  const removeProduct = (id: number, title: string) => {
-    if (storedCartItems) {
-      const updatedStoredCartItems = JSON.stringify(
-        storedCartItems.filter((item) => item.id !== id)
-      );
-      localStorage.setItem("cartItems", updatedStoredCartItems);
+  const updateStoredCartItems = (cartItems: IProduct[]) => {
+    localStorage.setItem("cartItems", JSON.stringify(cartItems));
+  };
+
+  const addProduct = (product: IProduct) => {
+    const storedCartItems: IProduct[] = getStoredCartItems();
+
+    // Check if product already exists then increase qty if not then add it
+    const existingProduct: IProduct | undefined = storedCartItems.find(
+      (item) => item.id === product.id
+    );
+
+    if (existingProduct) {
+      existingProduct.qty = (existingProduct.qty ?? 0) + 1;
+    } else {
+      storedCartItems.push(product);
     }
-    dispatch(deleteProduct({ id }));
+
+    // Update cart items in localStorage
+    updateStoredCartItems(storedCartItems);
+    dispatch(addItemToCart(product));
+    toast.success(`${product.title} has been added to your cart`);
+  };
+
+  const removeProduct = (productId: number, title: string) => {
+    const storedCartItems: IProduct[] = getStoredCartItems();
+
+    const existingProduct: IProduct | undefined = storedCartItems.find(
+      (item) => item.id === productId
+    );
+
+    // If Product exists in cart then remove it else do nothing
+    if (!existingProduct) return;
+
+    const updatedStoredItems = storedCartItems.filter(
+      (item) => item.id !== productId
+    );
+
+    updateStoredCartItems(updatedStoredItems);
+    dispatch(deleteProduct({ id: productId }));
     toast.error(`${title} has been removed from your cart`);
   };
 
-  //   Increment and decrement qty
-  const incrementQuantity = (id: number) => {
-    dispatch(incrementQty({ id }));
+  const incrementQuantity = (productId: number) => {
+    const storedCartItems: IProduct[] = getStoredCartItems();
 
-    if (storedCartItems) {
-      const existingProductIndex = storedCartItems.findIndex(
-        (item) => item.id === id
-      );
-
-      if (existingProductIndex !== -1) {
-        const existingProduct = storedCartItems[existingProductIndex];
-        const currentQty = existingProduct.qty ?? 0;
-
-        existingProduct.qty = currentQty + 1;
-        localStorage.setItem("cartItems", JSON.stringify([...storedCartItems]));
-      }
+    const existingProduct: IProduct | undefined = storedCartItems.find(
+      (item) => item.id === productId
+    );
+    if (existingProduct) {
+      existingProduct.qty = (existingProduct.qty ?? 0) + 1;
+      updateStoredCartItems(storedCartItems);
+      dispatch(incrementQty({ id: productId }));
     }
   };
 
-  //   decrement and decrement qty
-  const decrementQuantity = (id: number) => {
-    dispatch(decrementQty({ id }));
+  const decrementQuantity = (productId: number) => {
+    const storedCartItems: IProduct[] = getStoredCartItems();
 
-    if (storedCartItems) {
-      const existingProductIndex = storedCartItems.findIndex(
-        (item) => item.id === id
-      );
+    const existingProduct: IProduct | undefined = storedCartItems.find(
+      (item) => item.id === productId
+    );
+    if (existingProduct && existingProduct.qty && existingProduct.qty > 1) {
+      existingProduct.qty = (existingProduct.qty ?? 0) - 1;
 
-      if (existingProductIndex !== -1) {
-        const existingProduct = storedCartItems[existingProductIndex];
-        const currentQty = existingProduct.qty ?? 0;
-
-        if (currentQty > 1) {
-          existingProduct.qty = currentQty - 1;
-          localStorage.setItem(
-            "cartItems",
-            JSON.stringify([...storedCartItems])
-          );
-        }
-      }
+      updateStoredCartItems(storedCartItems);
+      dispatch(decrementQty({ id: productId }));
     }
-  };
 
-  // Reset cart in storage (clean all items)
-  const resetCartItemsStore = () => {
-    dispatch(resetCart());
-    if (storedCartItems) {
-      localStorage.removeItem("cartItems");
+    // If product quantity is less than 1 remove product from cart
+    if (existingProduct && existingProduct.qty && existingProduct.qty === 1) {
+      removeProduct(existingProduct.id, existingProduct.title);
+      return;
     }
   };
 
@@ -116,8 +99,6 @@ const useCart = () => {
     removeProduct,
     incrementQuantity,
     decrementQuantity,
-    resetCartItemsStore,
-    storedCartItems,
   };
 };
 

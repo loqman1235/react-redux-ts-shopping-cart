@@ -13,8 +13,6 @@ const Navbar = () => {
     (state: RootState) => state.cart
   );
 
-  console.log(totalAmount, "TOTAL AMOUNT");
-
   const toggleCartMenu = () => {
     setShowCartMenu(!showCartMenu);
   };
