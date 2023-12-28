@@ -1,10 +1,18 @@
-import { MdClose, MdShoppingBasket, MdCreditCard } from "react-icons/md";
+import {
+  FiShoppingCart,
+  FiHeart,
+  FiUser,
+  FiSearch,
+  FiX,
+  FiCreditCard,
+} from "react-icons/fi";
 import CartProduct from "./CartProduct";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../app/store";
 import { CartState } from "../features/cartSlice";
 import formatPrice from "../utils/formatPrice";
+import { Link, NavLink } from "react-router-dom";
 
 const Navbar = () => {
   const [showCartMenu, setShowCartMenu] = useState(false);
@@ -12,6 +20,10 @@ const Navbar = () => {
   const { cartItems, totalAmount } = useSelector<RootState, CartState>(
     (state: RootState) => state.cart
   );
+
+  const navbarLinkStyle =
+    "font-medium text-[#68778f] hover:text-[#001f3f] transition";
+  const navbarLinkActiveStyle = "text-[#001f3f] font-semibold";
 
   const toggleCartMenu = () => {
     setShowCartMenu(!showCartMenu);
@@ -46,8 +58,6 @@ const Navbar = () => {
         w-full 
         h-16
         bg-white/90
-        border-b 
-        border-b-neutral-200
         flex 
         items-center
         justify-between 
@@ -59,20 +69,100 @@ const Navbar = () => {
         backdrop-blur-md
         "
       >
-        <h2 className="text-2xl font-extrabold tracking-tight select-none cursor-pointer">
-          Buy<span className="text-blue-700">.it</span>
-        </h2>
+        <Link to="/" className="text-2xl font-bold font-serif uppercase">
+          Fabrica.
+        </Link>
 
-        {/* Cart Button */}
+        {/* Navbar links */}
 
-        <button className="relative" onClick={toggleCartMenu}>
-          <MdShoppingBasket size={24} />
-          {cartItems.length > 0 && (
-            <span className="absolute -right-1 -top-1 w-4 h-4 rounded-full bg-blue-500 flex items-center justify-center text-xs font-bold text-white">
-              {cartItems.length}
-            </span>
-          )}
-        </button>
+        <ul className="flex items-center gap-10">
+          <NavLink
+            to="/"
+            className={({ isActive }) => {
+              if (isActive) {
+                return navbarLinkActiveStyle;
+              }
+
+              return navbarLinkStyle;
+            }}
+          >
+            Home
+          </NavLink>
+
+          <NavLink
+            to="/new-arrivals"
+            className={({ isActive }) => {
+              if (isActive) {
+                return navbarLinkActiveStyle;
+              }
+
+              return navbarLinkStyle;
+            }}
+          >
+            New Arrivals
+          </NavLink>
+
+          <NavLink
+            to="/collections"
+            className={({ isActive }) => {
+              if (isActive) {
+                return navbarLinkActiveStyle;
+              }
+
+              return navbarLinkStyle;
+            }}
+          >
+            Collections
+          </NavLink>
+
+          <NavLink
+            to="/about"
+            className={({ isActive }) => {
+              if (isActive) {
+                return navbarLinkActiveStyle;
+              }
+
+              return navbarLinkStyle;
+            }}
+          >
+            About
+          </NavLink>
+
+          <NavLink
+            to="/contact"
+            className={({ isActive }) => {
+              if (isActive) {
+                return navbarLinkActiveStyle;
+              }
+
+              return navbarLinkStyle;
+            }}
+          >
+            Contact
+          </NavLink>
+        </ul>
+
+        {/* Buttons */}
+        <div className="flex items-center gap-4">
+          <button>
+            <FiSearch size={20} />
+          </button>
+
+          <button>
+            <FiUser size={20} />
+          </button>
+          <button>
+            <FiHeart size={20} />
+          </button>
+          <button className="relative" onClick={toggleCartMenu}>
+            <FiShoppingCart size={20} />
+            {cartItems.length > 0 && (
+              <span className="absolute -right-[6px] -top-[6px] w-4 h-4 rounded-full bg-neutral-800 flex items-center justify-center text-xs font-bold text-white">
+                {cartItems.length}
+              </span>
+            )}
+          </button>
+        </div>
       </div>
 
       {/* Cart Menu*/}
@@ -99,10 +189,10 @@ const Navbar = () => {
       >
         {/* Cart Header */}
         <div className="w-full flex items-center justify-between mb-5">
-          <h1 className="text-xl font-bold flex items-center gap-2">
+          <h1 className="text-lg font-semibold flex items-center gap-2">
             Your cart{" "}
             {cartItems.length > 0 && (
-              <span className="w-5 h-5 rounded-full flex items-center justify-center bg-blue-500 text-white text-xs">
+              <span className="w-5 h-5 rounded-full flex items-center justify-center bg-neutral-800 text-white text-xs">
                 {cartItems.length}
               </span>
             )}
@@ -111,7 +201,7 @@ const Navbar = () => {
             className=" hover:text-neutral-700 transition"
             onClick={toggleCartMenu}
           >
-            <MdClose size={24} />
+            <FiX size={24} />
           </button>
         </div>
         <hr />
@@ -127,7 +217,7 @@ const Navbar = () => {
               </div>
             </>
           ) : (
-            <p className="text-neutral-400 pt-5">Cart has not items yet</p>
+            <p className="text-[#68778f] pt-5">Cart has not items yet</p>
           )}
         </div>
 
@@ -136,8 +226,8 @@ const Navbar = () => {
             <div className="mt-auto">
               <hr />
               <div className="flex items-center justify-between py-5">
-                <h3 className="font-bold text-lg tracking-tight">Total</h3>
-                <h1 className="text-blue-700 font-bold text-lg">
+                <h3 className="font-semibold">Total</h3>
+                <h1 className="text-[#00796b] font-semibold">
                   {formatPrice(totalAmount)}
                 </h1>
               </div>
@@ -149,17 +239,16 @@ const Navbar = () => {
            text-lg
            bg-black
            text-white
-           font-bold
+           font-semibold
            flex
            items-center
            justify-center
-           rounded-md
            hover:bg-neutral-900 
            transition
            gap-2
            "
               >
-                <MdCreditCard size={20} /> Checkout
+                <FiCreditCard size={20} /> Checkout
               </button>
             </div>
           </>

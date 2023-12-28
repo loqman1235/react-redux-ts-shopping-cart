@@ -45,10 +45,15 @@ const Products = () => {
 
   return (
     <div className="px-5 md:px-10 w-full mb-10 pt-28">
-      <h2 className="text-2xl font-bold tracking-tight mb-4">Products</h2>
-      <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+      {/* Page title */}
+      <div className="w-full flex items-center justify-center mb-8">
+        <h2 className="text-3xl inline-block font-bold font-serif text-center relative after:absolute after:-bottom-3 after:left-1/2 after:-translate-x-1/2 after:h-px after:w-[60%] after:bg-black/50">
+          New Arrivals
+        </h2>
+      </div>
+      <div className="w-full grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-5">
         {loading
-          ? Array.from({ length: 8 }).map((_, i) => (
+          ? Array.from({ length: 10 }).map((_, i) => (
               <SkeletonProductCard key={i} />
             ))
           : products.map((product) => (

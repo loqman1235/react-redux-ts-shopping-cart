@@ -8,17 +8,16 @@ const SkeletonProductCard = () => {
     w-full
     h-fit
     shadow-sm
-    rounded-xl
     overflow-hidden
   "
     >
       {/* Product Image */}
-      <div className="w-full h-[220px] overflow-hidden bg-white rounded-br-xl rounded-bl-xl">
+      <div className="w-full h-[240px] overflow-hidden bg-white ">
         <Skeleton width="100%" height="100%" />
       </div>
 
       {/* Product details */}
-      <div className="p-5 w-full">
+      <div className="w-full mt-3">
         <h3 className="font-bold text-lg mb-px tracking-tight w-full">
           <Skeleton width="100%" height="100%" />
         </h3>
