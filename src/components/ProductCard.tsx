@@ -1,4 +1,3 @@
-import { MdAdd } from "react-icons/md";
 import { IProduct } from "../types";
 import formatPrice from "../utils/formatPrice";
 import useCart from "../hooks/useCart";
